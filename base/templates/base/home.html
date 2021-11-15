@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% extends 'main.html' %} {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/base/static/css.css" />
+    <title>Home</title>
+  </head>
+
+  <body>
+    {% block content %}
+    <style>
+      .home-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+      }
+    </style>
+    <br />
+    <div class="home-container">
+      <div>
+        <h1>Browse Topics</h1>
+        <hr />
+        <div>
+          <a href="{%url 'home' %}">All</a>
+        </div>
+        {% for topic in topics %}
+        <div>
+          <a href="{%url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
+        </div>
+
+        {% endfor %}
+      </div>
+      <div>
+        <a href="{%url 'create-room'%}">Create Room</a>
+        <h5>{{room_count}} rooms available</h5>
+        <div>
+          {% for room in rooms %}
+
+          <div>
+            <br />
+            {% if request.user == room.host %}
+            <a href="{% url 'update-room' room.id %}">Edit</a>
+            <a href="{% url 'delete-room' room.id %}">Delete</a>
+            {% endif %}
+
+            <span>@{{room.host.username}}</span>
+            <h5>
+              {{room.id}}--<a href="{% url 'room' room.id %}">{{room.name}}</a>
+            </h5>
+            <small>{{room.topic}}</small>
+
+            <hr />
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endblock content %}
+  </body>
+</html>
